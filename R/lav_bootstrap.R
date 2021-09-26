@@ -352,6 +352,8 @@ lav_bootstrap_internal <- function(object          = NULL,
         if(verbose) cat("   OK -- niter = ",
                         sprintf("%3d", fit.boot@optim$iterations), " fx = ",
                         sprintf("%13.9f", fit.boot@optim$fx), "\n")
+        # test_boot_id: S. F. Cheung: Add BOOT.idx
+        attr(out, "BOOT.idx") <- BOOT.idx
         out
     }
 
@@ -378,9 +380,12 @@ lav_bootstrap_internal <- function(object          = NULL,
 
     # handle errors and fill in container
     error.idx <- integer(0)
+    # test_boot_id: S. F. Cheung: Collect BOOT.idx for successful bootstrap iterations
+    BOOT.idx <- vector(mode = "list", length = R)
     for(b in seq_len(RR)) {
         if(!is.null(res[[b]]) && length(res[[b]]) > 0L) {
             t.star[b, ] <- res[[b]]
+            BOOT.idx[b] <- attr(res[[b]], "BOOT.idx")
         } else {
             error.idx <- c(error.idx, b)
         }
@@ -391,6 +396,7 @@ lav_bootstrap_internal <- function(object          = NULL,
     if(length(error.idx) > 0L) {
         warning("lavaan WARNING: only ", (R-length(error.idx)), " bootstrap draws were successful")
         t.star <- t.star[-error.idx,,drop=FALSE]
+        BOOT.idx <- BOOT.idx[-error.idx]
         attr(t.star, "error.idx") <- error.idx
     } else {
         if(verbose) cat("Number of successful bootstrap draws:",
@@ -404,6 +410,10 @@ lav_bootstrap_internal <- function(object          = NULL,
 
     # restore options
     options(old_options)
+
+    # test_boot_id: S. F. Cheung: Add the list of BOOT.idx 
+    #   as an attribute
+    attr(t.star, "BOOT.idx") <- BOOT.idx
 
     t.star
 }
