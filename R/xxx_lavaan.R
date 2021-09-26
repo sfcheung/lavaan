@@ -1517,6 +1517,8 @@ lavaan <- function(# user-specified model: can be syntax, parameter Table, ...
     if(!is.null(attr(VCOV, "BOOT.COEF"))) {
         lavboot <- list()
         lavboot$coef <- attr(VCOV, "BOOT.COEF")
+        # test_boot_id: S. F. Cheung: Save BOOT.idx to the BOOT slot 
+        lavboot$BOOT.idx <- attr(VCOV, "BOOT.idx")
     } else {
         lavboot <- list()
     }
