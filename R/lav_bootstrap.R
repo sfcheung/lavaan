@@ -385,7 +385,7 @@ lav_bootstrap_internal <- function(object          = NULL,
     for(b in seq_len(RR)) {
         if(!is.null(res[[b]]) && length(res[[b]]) > 0L) {
             t.star[b, ] <- res[[b]]
-            BOOT.idx[b] <- attr(res[[b]], "BOOT.idx")
+            BOOT.idx[b] <- list(attr(res[[b]], "BOOT.idx"))
         } else {
             error.idx <- c(error.idx, b)
         }
