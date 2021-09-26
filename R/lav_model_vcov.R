@@ -46,7 +46,8 @@ lav_model_nvcov_bootstrap <- function(lavmodel       = NULL,
     # save COEF and TEST (if any)
     attr(NVarCov, "BOOT.COEF") <- COEF
     attr(NVarCov, "BOOT.TEST") <- TEST
-
+    # test_boot_id: S. F. Cheung: Save BOOT.idx (if available)  
+    attr(NVarCov, "BOOT.idx") <- attr(COEF, "BOOT.idx")
     NVarCov
 }
 
