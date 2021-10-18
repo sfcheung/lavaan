@@ -615,7 +615,8 @@ lav_model_vcov_se <- function(lavmodel, lavpartable, VCOV = NULL,
         def.idx <- which(lavpartable$op == ":=")
         if(length(def.idx) > 0L) {
             if(!is.null(BOOT)) {
-                BOOT.def <- apply(BOOT, 1L, lavmodel@def.function)
+                BOOT.def <- apply(BOOT, 1L, lavmodel@def.function,
+                                            GLIST = lavmodel)
                 if(length(def.idx) == 1L) {
                     BOOT.def <- as.matrix(BOOT.def)
                 } else {
@@ -625,10 +626,12 @@ lav_model_vcov_se <- function(lavmodel, lavpartable, VCOV = NULL,
             } else {
                 # regular delta method
                 x <- lav_model_get_parameters(lavmodel = lavmodel, type = "free")
-                 JAC <- try(lav_func_jacobian_complex(func = lavmodel@def.function, x = x),
+                 JAC <- try(lav_func_jacobian_complex(func = lavmodel@def.function, x = x,
+                                                      GLIST = lavmodel@GLIST),
                            silent=TRUE)
                 if(inherits(JAC, "try-error")) { # eg. pnorm()
-                    JAC <- lav_func_jacobian_simple(func = lavmodel@def.function, x = x)
+                    JAC <- lav_func_jacobian_simple(func = lavmodel@def.function, x = x,
+                                                    GLIST = lavmodel@GLIST)
                 }
                 def.cov <- JAC %*% VCOV %*% t(JAC)
             }

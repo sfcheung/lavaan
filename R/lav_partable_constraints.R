@@ -25,12 +25,18 @@ lav_partable_constraints_def <- function(partable, con = NULL, debug = FALSE,
     }
 
     # create function
-    formals(def.function) <- alist(.x.=, ...=)
+    formals(def.function) <- alist(.x.=, ...=, GLIST=)
     if(txtOnly) {
         BODY.txt <- ""
     } else {
         BODY.txt <- paste("{\n# parameter definitions\n\n")
     }
+
+    BODY.txt <- paste0(BODY.txt,
+                       "if (inherits(GLIST, 'lavModel')) {\n",
+                       "browser()\n",
+                       "GLIST <- lav_model_x2GLIST(GLIST, .x.)\n",
+                       "}\n")
 
     lhs.names <- partable$lhs[def.idx]
     def.labels <- all.vars( parse(file="", text=partable$rhs[def.idx]) )

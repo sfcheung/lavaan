@@ -530,7 +530,8 @@ parameterestimates <- function(object,
                 # def.idx
                 def.idx <- which(object@ParTable$op == ":=")
                 if(length(def.idx) > 0L) {
-                    BOOT.def <- apply(BOOT, 1, object@Model@def.function)
+                    BOOT.def <- apply(BOOT, 1, object@Model@def.function,
+                                               GLIST = lavmodel)
                     if(length(def.idx) == 1L) {
                         BOOT.def <- as.matrix(BOOT.def)
                     } else {
@@ -555,7 +556,8 @@ parameterestimates <- function(object,
                 # def.idx
                 def.idx <- which(object@ParTable$op == ":=")
                 if(length(def.idx) > 0L) {
-                    BOOT.def <- apply(BOOT, 1, object@Model@def.function)
+                    BOOT.def <- apply(BOOT, 1, object@Model@def.function,
+                                               GLIST = lavmodel)
                     if(length(def.idx) == 1L) {
                         BOOT.def <- as.matrix(BOOT.def)
                     } else {
@@ -596,7 +598,8 @@ parameterestimates <- function(object,
                def.idx <- which(object@ParTable$op == ":=")
                if(length(def.idx) > 0L) {
                    x.def <- object@Model@def.function(x)
-                   BOOT.def <- apply(BOOT, 1, object@Model@def.function)
+                   BOOT.def <- apply(BOOT, 1, object@Model@def.function,
+                                              GLIST = object@Model)
                    if(length(def.idx) == 1L) {
                        BOOT.def <- as.matrix(BOOT.def)
                    } else {

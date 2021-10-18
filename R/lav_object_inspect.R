@@ -2597,7 +2597,8 @@ lav_object_inspect_vcov_def <- function(object, joint = FALSE,
         # bootstrap or not?
         if(!is.null(object@boot$coef)) {
             BOOT <- object@boot$coef
-            BOOT.def <- apply(BOOT, 1L, lavmodel@def.function)
+            BOOT.def <- apply(BOOT, 1L, lavmodel@def.function,
+                                        GLIST = lavmodel)
             if(length(def.idx) == 1L) {
                 BOOT.def <- as.matrix(BOOT.def)
             } else {
@@ -2614,10 +2615,10 @@ lav_object_inspect_vcov_def <- function(object, joint = FALSE,
 
             # regular delta method
             JAC <- try(lav_func_jacobian_complex(func = lavmodel@def.function,
-                       x = x), silent=TRUE)
+                       x = x, GLIST = lavmodel@GLIST), silent=TRUE)
             if(inherits(JAC, "try-error")) { # eg. pnorm()
                 JAC <- lav_func_jacobian_simple(func = lavmodel@def.function,
-                                                x = x)
+                                                x = x, GLIST = lavmodel@GLIST)
             }
             if(joint) {
                 JAC2 <- rbind( diag(nrow = ncol(JAC)), JAC )

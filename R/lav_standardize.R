@@ -266,7 +266,7 @@ lav_standardize_lv <- function(lavobject = NULL,
     idx <- which(partable$op == ":=")
     if(length(idx) > 0L) {
         x <- out[ partable$free & !duplicated(partable$free) ]
-        out[idx] <- lavmodel@def.function(x)
+        out[idx] <- lavmodel@def.function(x, GLIST = GLIST)
     }
 
     # 5b "=="
@@ -496,7 +496,7 @@ lav_standardize_all <- function(lavobject = NULL,
     idx <- which(partable$op == ":=")
     if(length(idx) > 0L) {
         x <- out[ partable$free & !duplicated(partable$free) ]
-        out[idx] <- lavmodel@def.function(x)
+        out[idx] <- lavmodel@def.function(x, GLIST = GLIST)
     }
 
     # 5b "=="
@@ -734,7 +734,7 @@ lav_standardize_all_nox <- function(lavobject = NULL,
     idx <- which(partable$op == ":=")
     if(length(idx) > 0L) {
         x <- out[ partable$free & !duplicated(partable$free) ]
-        out[idx] <- lavmodel@def.function(x)
+        out[idx] <- lavmodel@def.function(x, GLIST = GLIST)
     }
 
     # 5b "=="

@@ -42,7 +42,7 @@ lav_model_get_parameters <- function(lavmodel = NULL, GLIST = NULL,
         x.free <- lav_model_get_parameters(lavmodel = lavmodel, GLIST = GLIST,
                                            type = "free")
         if(length(lavmodel@x.def.idx) > 0L) {
-            x[lavmodel@x.def.idx] <- lavmodel@def.function(x.free)
+            x[lavmodel@x.def.idx] <- lavmodel@def.function(x.free, GLIST = GLIST)
         }
         if(length(lavmodel@x.ceq.idx) > 0L) {
             x[lavmodel@x.ceq.idx] <- lavmodel@ceq.function(x.free)
