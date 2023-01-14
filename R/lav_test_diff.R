@@ -9,6 +9,7 @@ lav_test_diff_Satorra2000 <- function(m1, m0, H1 = TRUE, A.method = "delta",
                                       Satterthwaite = FALSE,
                                       scaled.shifted = FALSE,
                                       old.approach = FALSE,
+                                      fg2 = TRUE,
                                       debug = FALSE) {
 
     if(scaled.shifted) {
@@ -125,6 +126,12 @@ lav_test_diff_Satorra2000 <- function(m1, m0, H1 = TRUE, A.method = "delta",
 
     # this is what we did <0.6-13
     if(old.approach) {
+        cat("\nOld approach used.\n")
+        if (fg2) {
+            cat("Use 'trace.UGamma2 <- sum(fg^2 * trace.UGamma2)'\n")
+          } else {
+            cat("Use 'trace.UGamma2 <- sum(fg * trace.UGamma2)'\n")
+          }
         trace.UGamma  <- numeric(ngroups)
         trace.UGamma2 <- numeric(ngroups)
         for(g in 1:ngroups) {
@@ -138,9 +145,14 @@ lav_test_diff_Satorra2000 <- function(m1, m0, H1 = TRUE, A.method = "delta",
 
         trace.UGamma <- sum(fg * trace.UGamma)
         if(Satterthwaite) {
-            trace.UGamma2 <- sum(fg * trace.UGamma2)
+            if (fg2) {
+                  trace.UGamma2 <- sum(fg^2 * trace.UGamma2)
+              } else {
+                  trace.UGamma2 <- sum(fg * trace.UGamma2)
+              }
         }
     } else {
+        cat("\nNew approach used.\n")
         # for trace.UGamma, we can compute the trace per group
         # as in Satorra (2000) eq. 23
         trace.UGamma  <- numeric(ngroups)

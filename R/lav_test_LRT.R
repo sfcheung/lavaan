@@ -17,7 +17,9 @@
 
 lavTestLRT <- function(object, ..., method = "default", A.method = "delta",
                        scaled.shifted = TRUE,
-                       H1 = TRUE, type = "Chisq", model.names = NULL) {
+                       H1 = TRUE, type = "Chisq", model.names = NULL,
+                       old.approach = FALSE,
+                       fg2 = FALSE) {
 
     type <- tolower(type)
     method <- tolower( gsub("[-_\\.]", "", method ) )
@@ -266,7 +268,9 @@ lavTestLRT <- function(object, ..., method = "default", A.method = "delta",
                                                  H1 = TRUE,
                                                  Satterthwaite = Satterthwaite,
                                                  scaled.shifted = scaled.shifted,
-                                                 A.method = A.method)
+                                                 A.method = A.method,
+                                                 old.approach = old.approach,
+                                                 fg2 = fg2)
                 STAT.delta[m+1] <- out$T.delta
                   Df.delta[m+1] <- out$df.delta
                 if(scaled.shifted) {
