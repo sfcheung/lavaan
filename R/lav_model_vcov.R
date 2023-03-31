@@ -649,6 +649,10 @@ lav_model_vcov_se <- function(lavmodel, lavpartable, VCOV = NULL,
         def.idx <- which(lavpartable$op == ":=")
         if(length(def.idx) > 0L) {
             if(!is.null(BOOT)) {
+                error.idx <- attr(BOOT, "error.idx")
+                if(length(error.idx) > 0L) {
+                    BOOT <- BOOT[-error.idx,,drop = FALSE] # drops attributes
+                }
                 BOOT.def <- apply(BOOT, 1L, lavmodel@def.function)
                 if(length(def.idx) == 1L) {
                     BOOT.def <- as.matrix(BOOT.def)
