@@ -107,9 +107,13 @@ lav_object_summary <- function(object, header       = TRUE,
         } else {
 
             # SEM version
-
             # 2. summarize optim info (including estimator)
-            res$optim <- list(estimator      = object@Options$estimator,
+            user_estimator <- lavaan::lavInspect(object, "call")$estimator
+            if (is.null(user_estimator)) {
+              user_estimator <- "Default"
+            }
+            res$optim <- list(user_estimator = user_estimator,
+                              estimator      = object@Options$estimator,
                               estimator.args = object@Options$estimator.args,
                               optim.method   = object@Options$optim.method,
                               npar           = object@Model@nx.free,

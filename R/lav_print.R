@@ -972,6 +972,7 @@ print.lavaan.summary <- function(x, ..., nd = 3L) {
 
     # optim
     if(!is.null(y$optim)) {
+        user_estimator <- y$optim$user_estimator
         estimator      <- y$optim$estimator
         estimator.args <- y$optim$estimator.args
         optim.method   <- y$optim$optim.method
@@ -985,7 +986,12 @@ print.lavaan.summary <- function(x, ..., nd = 3L) {
         cat("\n")
         # cat("Optimization information:\n\n")
 
-        c1 <- c("Estimator")
+        c1 <- c("Estimator Options Set Requested")
+        # second column
+        tmp.est <- toupper(user_estimator)
+        c2 <- c(tmp.est)
+
+        c1 <- c(c1, "Estimator")
         # second column
         tmp.est <- toupper(estimator)
         if(tmp.est == "DLS") {
@@ -993,7 +999,7 @@ print.lavaan.summary <- function(x, ..., nd = 3L) {
                                        1L, 1L)
             tmp.est <- paste("DLS-", toupper(dls.first.letter), sep = "")
         }
-        c2 <- tmp.est
+        c2 <- c(c2, tmp.est)
 
         # additional estimator args
         if(!is.null(estimator.args) &&
