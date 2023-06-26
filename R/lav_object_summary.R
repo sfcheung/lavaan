@@ -108,7 +108,7 @@ lav_object_summary <- function(object, header       = TRUE,
 
             # SEM version
             # 2. summarize optim info (including estimator)
-            user_estimator <- lavaan::lavInspect(object, "call")$estimator
+            user_estimator <- object@call$estimator
             if (is.null(user_estimator)) {
               user_estimator <- "Default"
             }
