@@ -32,7 +32,8 @@ lav_model_nvcov_bootstrap <- function(lavmodel = NULL,
     type = boot.type,
     FUN = ifelse(boot.type == "bollen.stine",
       "coeftest", "coef"
-    )
+    ),
+    keep.idx = TRUE
   )
   # warn            = -1L)
   COEF.orig <- COEF

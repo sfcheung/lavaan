@@ -361,6 +361,8 @@ lav_bootstrap_internal <- function(object = NULL,
         cat("     FAILED: creating sample statistics\n")
         cat(bootSampleStats[1])
       }
+      # cat("P1")
+      # browser("P1")
       out <- as.numeric(NA)
       attr(out, "nonadmissible.flag") <- TRUE
       if (keep.idx) {
@@ -389,6 +391,8 @@ lav_bootstrap_internal <- function(object = NULL,
     ))
     if (!fit.boot@optim$converged) {
       if (lav_verbose()) cat("     FAILED: no convergence\n")
+      # cat("P2")
+      # browser("P2")
       out <- as.numeric(NA)
       attr(out, "nonadmissible.flag") <- TRUE
       if (keep.idx) {
@@ -411,6 +415,8 @@ lav_bootstrap_internal <- function(object = NULL,
     }
     if (inherits(out, "try-error")) {
       if (lav_verbose()) cat("     FAILED: applying FUN to fit.boot\n")
+      # cat("P3")
+      # browser("P3")
       out <- as.numeric(NA)
       attr(out, "nonadmissible.flag") <- TRUE
       if (keep.idx) {
