@@ -813,11 +813,22 @@ ldw_parse_model_string <- function(model.syntax = "", as.data.frame. = FALSE) {
       }, ""), "\n")
     }
     nelem <- length(formul1$elem.type)
+    opi2 <- which(formul1$elem.type %in% types$lavaanoperator)
+    op2 <- formul1$elem.text[opi2]
     # where is the operator
-    opi <- match(types$lavaanoperator, formul1$elem.type)
-    # opi <- which(formul1$elem.type == types$lavaanoperator)
-    # if (length(opi) > 1L) opi <- opi[1L]
-    op <- formul1$elem.text[opi]
+    # If more than one operator, then don't treat ":" as an operator
+    if ((":" %in% op2) &&
+        (length(opi2) > 1)) {
+      colon_on_lhs <- (op2[1] == ":")
+      opi <- opi2[which(op2 != ":")]
+      op <- formul1$elem.text[opi]
+    } else {
+      colon_on_lhs <- FALSE
+      opi <- match(types$lavaanoperator, formul1$elem.type)
+      # opi <- which(formul1$elem.type == types$lavaanoperator)
+      # if (length(opi) > 1L) opi <- opi[1L]
+      op <- formul1$elem.text[opi]
+    }
     if (any(op == constraint_operators)) { # ----- constraints -------
       lhs <- paste(formul1$elem.text[seq.int(1L, opi - 1L)], collapse = "")
       rhs <- paste(formul1$elem.text[seq.int(opi + 1L, nelem)], collapse = "")
@@ -904,8 +915,8 @@ ldw_parse_model_string <- function(model.syntax = "", as.data.frame. = FALSE) {
       )
     }
     # checks for valid names in lhs and rhs
-    ldw_parse_check_valid_name(formul1, opi - 1L, modelsrc) # valid name lhs
-    for (j in seq.int(opi + 1L, nelem)) { # valid names rhs
+    # ldw_parse_check_valid_name(formul1, opi - 1L, modelsrc) # valid name lhs
+    for (j in c(seq.int(opi - 1L), seq.int(opi + 1L, nelem))) { # valid names rhs
       if (formul1$elem.type[j] == types$identifier &&
         formul1$elem.text[j] != "NA") {
         ldw_parse_check_valid_name(formul1, j, modelsrc)
@@ -971,8 +982,12 @@ ldw_parse_model_string <- function(model.syntax = "", as.data.frame. = FALSE) {
         paste(formul1$elem.text[seq.int(colons - 1L, colons + 1L)],
           collapse = ""
         )
-      formul1 <- ldw_parse_sublist(formul1, seq.int(1L, colons - 1L))
+      # formul1 <- ldw_parse_sublist(formul1, seq.int(1L, colons - 1L))
+      formul1 <- ldw_parse_sublist(formul1, setdiff(seq_along(formul1$elem.type), c(colons, colons + 1L)))
       nelem <- length(formul1$elem.type)
+      # Update opi
+      opi <- match(types$lavaanoperator, formul1$elem.type)
+      op <- formul1$elem.text[opi]
     }
     # modifiers
     rhsmodelems <- which(seq_along(formul1$elem.type) > opi &
