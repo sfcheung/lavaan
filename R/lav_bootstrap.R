@@ -367,7 +367,8 @@ lav_bootstrap_internal <- function(object = NULL,
 
     # show progress?
     if (show.progress) {
-      cat("  ... bootstrap draw number:", sprintf("%4d", b))
+      cat(if (interactive()) "\r" else "",
+          "  ... bootstrap draw number:", sprintf("%4d", b))
     }
     bootSampleStats <- try(lav_samplestats_from_data(
       lavdata       = newData,
@@ -474,7 +475,8 @@ lav_bootstrap_internal <- function(object = NULL,
         "   OK -- niter = ",
         sprintf("%3d", fit.boot@optim$iterations), " fx = ",
         sprintf("%11.9f", fit.boot@optim$fx),
-        if (admissible.flag) " " else "n", "\n"
+        if (admissible.flag) " " else "n", "",
+        if (interactive()) "" else "\n"
       )
     }
 
@@ -562,7 +564,9 @@ lav_bootstrap_internal <- function(object = NULL,
   } else {
     lapply(seq_len(RR), fn)
   }
-
+  if (show.progress) {
+    cat("\n")
+  }
   # restore old RNGkind()
   if (ncpus > 1L && have_mc) {
     RNGkind(RNGkind_old[1], RNGkind_old[2], RNGkind_old[3])
