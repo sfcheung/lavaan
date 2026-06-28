@@ -1,6 +1,8 @@
 # get missing patterns
 lav_data_mi_patterns <- function(y, sort_freq = FALSE, coverage = FALSE,
-                                      lp = NULL) {
+                                      lp = NULL,
+                                      boot_idx = NULL,
+                                      old_mi_patterns = NULL) {
   # handle two-level data
   if (!is.null(lp)) {
     y_orig <- y
@@ -18,21 +20,46 @@ lav_data_mi_patterns <- function(y, sort_freq = FALSE, coverage = FALSE,
   # empty cases
   empty_idx <- which(rowSums(obs) == 0L)
 
-  # pattern of observed values per observation
-  case_id <- apply(1L * obs, 1L, paste, collapse = "")
-
-  # remove empty patterns
-  if (length(empty_idx)) {
-    case_id_nonempty <- case_id[-empty_idx]
-  } else {
+  # Precompute something if old_mi_patterns not NULL
+  if (!is.null(old_mi_patterns)) {
+    old_case_idx_merged <- data.frame(
+      case_idx = unlist(old_mi_patterns$case.idx),
+      pattern = rep(old_mi_patterns$id, times = old_mi_patterns$freq),
+      pattern_id = rep(seq_along(old_mi_patterns$id), times = old_mi_patterns$freq)
+    )
+    new_case_idx_merged <- old_case_idx_merged[match(boot_idx, old_case_idx_merged$case_idx), ]
+    case_id <- new_case_idx_merged$pattern
+    # CHECK: If bootstrap, always no empty case?
     case_id_nonempty <- case_id
-  }
-
-  # sort non-empty patterns (from high occurrence to low occurrence)
-  if (sort_freq) {
-    table_1 <- sort(table(case_id_nonempty), decreasing = TRUE)
+    tmp <- sapply(
+                split(new_case_idx_merged, new_case_idx_merged$pattern),
+                nrow
+              )
+    table_1 <- structure(
+        tmp,
+        dim = length(table_1),
+        dimnames = list(case_id_nonempty = names(tmp)),
+        class = "table"
+      )
   } else {
-    table_1 <- table(case_id_nonempty)
+
+    # pattern of observed values per observation
+    case_id <- apply(1L * obs, 1L, paste, collapse = "")
+
+    # remove empty patterns
+    if (length(empty_idx)) {
+      case_id_nonempty <- case_id[-empty_idx]
+    } else {
+      case_id_nonempty <- case_id
+    }
+
+    # sort non-empty patterns (from high occurrence to low occurrence)
+    if (sort_freq) {
+      table_1 <- sort(table(case_id_nonempty), decreasing = TRUE)
+    } else {
+      table_1 <- table(case_id_nonempty)
+    }
+
   }
 
   # unique pattern ids

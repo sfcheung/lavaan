@@ -49,7 +49,9 @@ lav_data_update <- function(lavdata = NULL,
     # Mp + nobs
     if (lavoptions$missing != "listwise") {
       newdata@Mp[[g]] <- lav_data_mi_patterns(new_x[[g]],
-        sort_freq = FALSE, coverage = TRUE
+        sort_freq = FALSE, coverage = TRUE,
+        boot_idx = boot_idx[[g]],
+        old_mi_patterns = lavdata@Mp[[g]]
       )
       newdata@nobs[[g]] <-
         (nrow(newdata@X[[g]]) - length(newdata@Mp[[g]]$empty.idx))
