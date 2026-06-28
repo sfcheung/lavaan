@@ -37,7 +37,7 @@ lav_data_mi_patterns <- function(y, sort_freq = FALSE, coverage = FALSE,
               )
     table_1 <- structure(
         tmp,
-        dim = length(table_1),
+        dim = length(tmp),
         dimnames = list(case_id_nonempty = names(tmp)),
         class = "table"
       )
